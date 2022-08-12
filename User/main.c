@@ -6,7 +6,6 @@
 #include "tm_stm32f4_adc.h"
 #include "tm_stm32f4_dac.h"
 #include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_disco.h"
 #include "tm_stm32f4_ili9341_ltdc.h"
 #include "stm32f4xx_spi.h"
 #include "tm_stm32f4_fonts.h"
@@ -19,7 +18,7 @@
 
 /* FFT configurations */
 #define SAMPLES		  	2048          /* 1024 real elements and 1024 imaginary elements */
-#define FFT_SIZE	    SAMPLES / 2		/* FFT size is half of samples */
+#define FFT_SIZE	    SAMPLES / 2       /* FFT size is half of samples */
 
 #define FFT_BAR_MAX_HEIGHT		120   /* 120 px on the LCD */
 
@@ -27,7 +26,7 @@
 float32_t Input[SAMPLES];          /* Float array with 2048 samples from audio stream */
 float32_t Output[FFT_SIZE];        /* Float array of 1024 magnitudes of 1024 different frequencies */
 float32_t maxMag;                  /* Max frequency magnitude */
-uint32_t maxIndex;						     /* Index of max frequency magnitdue */
+uint32_t maxIndex;		   /* Index of max frequency magnitdue */
 uint16_t i;                        /* Index for for loop */
 float32_t frequency;               /* Frequency of the max magnitude */
 float32_t resolution = 44.4;       /* Frequency resolution */
@@ -49,7 +48,6 @@ char frequency_array[20];
 
 
 /* Draw bar for LCD */
-/* Simple library to draw bars */
 void DrawBar(uint16_t bottomX, uint16_t bottomY, uint16_t maxHeight, uint16_t maxMag, float32_t value, uint16_t foreground, uint16_t background) {
 	uint16_t height;
 	height = (uint16_t)((float32_t)value / (float32_t)maxMag * (float32_t)maxHeight);
@@ -72,9 +70,6 @@ int main(void) {
 	
 	/* Delay init */
 	TM_DELAY_Init();
-	
-	/* Initialize LED's on board */
-	TM_DISCO_LedInit();
 	
 	/* Initialize LCD */
 	TM_ILI9341_Init();
@@ -137,13 +132,13 @@ int main(void) {
 			Input[(uint16_t)(i + 1)] = 0;
 		}
 				
-		/* Initialize the CFFT/CIFFT module, intFlag = 0, doBitReverse = 1 */
+		/* Initialize CFFT/CIFFT module*/
 		arm_cfft_radix4_init_f32(&S, FFT_SIZE, 0, 1);
 		
-		/* Process the data through the CFFT/CIFFT module */
+		/* Process CFFT/CIFFT module */
 		arm_cfft_radix4_f32(&S, Input);
 		
-		/* Process the data through the Complex Magniture Module for calculating the magnitude at each bin */
+		/* Process Complex Magniture Module to calculate magnitude at each bin */
 		arm_cmplx_mag_f32(Input, Output, FFT_SIZE);
 		
 		/* Set DC frequency to 0 */
