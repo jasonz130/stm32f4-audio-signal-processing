@@ -51,7 +51,7 @@ void TM_DAC_Init(TM_DAC_Channel_t DACx) {
         DAC->CR |= DAC_CR_EN2;
     }
 }
-
+ 
 void TM_DAC_SetValue(TM_DAC_Channel_t DACx, uint16_t value) {
     /* Check value */
     if (value > 4095) {
